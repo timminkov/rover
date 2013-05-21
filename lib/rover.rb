@@ -1,50 +1,27 @@
 class Rover
-  def initialize(x, y, h)
+  def initialize(x, y, nav)
     @x = x
     @y = y
-    @h = h
+    @nav = nav 
+    @compass = ['N', 'E', 'S', 'W'] 
   end
 
   def location
-    [@x, @y, @h]
-  end
-
-  def turn_left
-    case @h
-      when 'N'
-        @h = 'W'
-      when 'W'
-        @h = 'S'
-      when 'S'
-        @h = 'E'
-      else
-        @h = 'N'
-    end 
-  end
-
-  def turn_right
-    case @h
-      when 'N'
-        @h = 'E'
-      when 'E'
-        @h = 'S'
-      when 'S'
-        @h = 'W'
-      else
-        @h = 'N'
-    end
+    [@x, @y, @nav]
   end
 
   def move
-    case @h
-      when 'N'
-        @y += 1
-      when 'E'
-        @x += 1
-      when 'S'
-        @y -= 1
-      else
-        @x -= 1
-    end
+    @y += 1 if @nav == 'N'
+    @y -= 1 if @nav == 'S'
+    @x += 1 if @nav == 'E'
+    @x -= 1 if @nav == 'W'
+  end    
+
+  def turn_left
+    @nav = @compass[@compass.index(@nav) - 1]
+  end
+
+  def turn_right
+    @nav = @compass[@compass.index(@nav) + 1] || @compass[0]
   end
 end
