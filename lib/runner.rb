@@ -13,7 +13,13 @@ class Runner
   def run
     self.parse_file
     self.deploy_rovers
-    @rovers.map! { |arr| arr.join(" ") if arr.class == Array } 
+    @rovers.map! do |arr| 
+      if arr.class == Array 
+        arr.join(" ") if arr.class == Array
+      else
+        arr
+      end
+    end
   end 
 
   def parse_file
