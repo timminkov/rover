@@ -27,7 +27,7 @@ The output for each rover should be its final co-ordinates and heading.
 Example Input/Output
 --------------------
 INPUT AND OUTPUT
- 
+<pre> 
 Test Input:
 5 5
 1 2 N
@@ -38,20 +38,26 @@ MMRMMRMRRM
 Expected Output:
 1 3 N
 5 1 E
+</pre>
 
 Usage
 -----
 Mars Rover was written in Ruby 2.0.0 but should work with 1.9.3.
 
-To run, use 
+To run, use
+  <pre> 
   ruby bin/start
+  </pre>
 
 You can use custom instructions by replacing the instructions.txt file located in bin/. Keep in mind you need to keep the same filename (instructions.txt)!.
 
 Testing
 -------
 To run tests, use
+  <pre>
   rspec
+  </pre>
+Recent versions of Rspec are supported.
 
 Contact
 -------
