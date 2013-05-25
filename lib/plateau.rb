@@ -13,10 +13,10 @@ class Plateau
   private
   
   def less_than_zero?(x, y)
-    true if x < 0 || y < 0
+    x < 0 || y < 0
   end 
 
   def greater_than_bounds?(x, y)
-    true if x > @boundx || y > @boundy
+    x > @boundx || y > @boundy
   end
 end

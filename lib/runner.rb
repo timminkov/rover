@@ -3,45 +3,36 @@ require 'parser'
 require 'plateau'
 
 class Runner
-  attr_reader :rovers, :instructions, :plateau
-
-  def initialize(file)
-    @file = file
-    @rovers = []
-  end
-
-  def run
-    self.parse_file
-    self.deploy_rovers
-    @rovers.map! do |arr| 
-      if arr.class == Array 
-        arr.join(" ") if arr.class == Array
-      else
-        arr
-      end
-    end
+  def self.run(file)
+    plateau_size, instructions = Runner.parse_file(file)
+    plateau = Plateau.new(*plateau_size)
+    Runner.deploy_rovers(plateau, instructions).map { |arr| arr.join(" ") }
   end 
 
-  def parse_file
-    parser = Parser.new(@file)
+  def self.parse_file(file)
+    parser = Parser.new(file)
     parser.parse!
-    @plateau = Plateau.new(*parser.plateau_size)
-    @instructions = parser.instructions
+    [parser.plateau_size, parser.instructions]
   end
 
-  def deploy_rovers
-    @instructions.each_pair do |loc, dir|
-      rover = Rover.new(loc[0].to_i, loc[1].to_i, loc[2])
-      dir.each do |direction|
-        rover.turn_left if direction == 'L'
-        rover.turn_right if direction == 'R'
-        rover.move if direction == 'M'
-      end
-      if @plateau.is_a_valid_move?(rover.location[0], rover.location[1])
-        @rovers << rover.location
-      else
-        @rovers << "This rover went out of bounds!"
-      end 
+  def self.deploy_rovers(plateau, instructions)
+    rovers = []
+    instructions.each_pair do |loc, dir|
+      rover = Runner.create_rover(loc)
+      rovers << Runner.send_instructions(rover, plateau, dir) 
     end
+    rovers
+  end
+
+  def self.send_instructions(rover, plateau, instructions)
+    instructions.each do |instruction| 
+      rover.receive_instruction!(instruction)
+      return ["This rover went out of bounds!"] unless plateau.is_a_valid_move?(rover.location[0], rover.location[1]) 
+    end
+    rover.location
+  end
+
+  def self.create_rover(loc)
+    Rover.new(loc[0].to_i, loc[1].to_i, loc[2])
   end
 end

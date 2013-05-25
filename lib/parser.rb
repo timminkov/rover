@@ -1,36 +1,22 @@
 class Parser
-  attr_reader :plateau_size, :instructions, :file_array
+  attr_reader :plateau_size, :instructions
 
   def initialize(file)
-    @file = file
-    @file_array = []
+    @lines = file.to_a
+    file.close
   end
 
   def parse!
-    self.to_array
-    self.plateau_size!
-    self.clean_up_array!
-    self.to_hash
+    @plateau_size = parse_plateau_size(@lines.first) 
+    @instructions = parse_instructions(@lines.drop(1)) 
   end
 
-  def to_array
-    @file.each do |line|
-      @file_array << line 
-    end
-    @file.close 
-    @file_array
+  def parse_plateau_size(line)
+    line.split(" ").map &:to_i
   end
 
-  def clean_up_array!
-    @file_array.map! { |line| line.split(%r{\s*}) } 
-  end
-
-  def plateau_size!
-    @plateau_size = @file_array.slice!(0).split 
-    @plateau_size.map! { |pos| pos.to_i }
-  end
-
-  def to_hash
-    @instructions = Hash[*@file_array]
+  def parse_instructions(lines)
+    tokenized_lines = lines.map { |line| line.split(%r{\s*}) }
+    Hash[*tokenized_lines]
   end
 end
